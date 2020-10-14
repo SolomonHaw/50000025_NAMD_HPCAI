@@ -20,12 +20,10 @@ export WORK_DIR=path/to/work/dir<path to your working directory>
   -O $HOME/$WORK_DIR/code/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-
 x86_64.tbz
 ### UCX git
-This is an alternate method of getting UCX, not neccessary if the UCX in
-the HPC-X package works.
+This is an alternate method of getting UCX, not neccessary if the UCX in the HPC-X package works.
   git clone --bare https://github.com/openucx/ucx.git \
   $HOME/$WORK_DIR/github/ucx.git
 ### OpenMPI git
-This is an alternate method of getting OpenMPI, not neccessary if the OpenMPI in
-the HPC-X package works.
+This is an alternate method of getting OpenMPI, not neccessary if the OpenMPI in the HPC-X package works.
   git clone --bare https://github.com/open-mpi/ompi.git \
   $HOME/$WORK_DIR/github/ompi.git
