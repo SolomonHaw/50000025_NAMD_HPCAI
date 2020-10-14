@@ -42,3 +42,6 @@ OpenMPI in the HPC-X package works.
 
   $ git clone --bare https://github.com/open-mpi/ompi.git \
   $HOME/$WORK_DIR/github/ompi.git
+  
+## Building FFTW3  
+  
