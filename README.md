@@ -2,7 +2,8 @@
  // Authored by: Solomon Haw Wei Wern
  // For APAC HPC-AI Competition 2020 
  // Team Curtin
-##Build Guideline
+
+## Build Guideline
 
 ## Getting the necessary files
 export WORK_DIR=path/to/work/dir<path to your working directory>
