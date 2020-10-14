@@ -1,1 +1,29 @@
+//FFTW3-GCC
+CODE_NAME=fftw \
+CODE_TAG=3.3.8 \
+PSXE_DIR=/app/modules/dev-intel/composerxe/2017.0.098 \
+CODE_BASE_DIR=$HOME/scratch/apacsNAMD/cluster/curtin/code \
+CODE_DIR=$CODE_BASE_DIR/$CODE_NAME-$CODE_TAG \
+INSTALL_DIR=$HOME/scratch/apacsNAMD/cluster/curtin/application/lib \
+CMAKE_PATH=$HOME/cmake/bin/cmake \
+GCC_PATH=$HOME/scratch/apacsNAMD/cluster/gcc840-build/bin/gcc \
 
+BUILD_LABEL=$CODE_TAG-shared-gcc840-avx2-haswell \
+CMD_BUILD_SHARED_GCC=" \
+mkdir $CODE_DIR/build-$BUILD_LABEL; \
+cd $CODE_DIR/build-$BUILD_LABEL \
+&& $CMAKE_PATH .. \
+-DBUILD_SHARED_LIBS=ON -DENABLE_FLOAT=ON \
+-DENABLE_OPENMP=OFF -DENABLE_THREADS=OFF \
+-DCMAKE_C_COMPILER=$GCC_PATH -DCMAKE_CXX_COMPILER=$GCC_PATH \
+-DENABLE_AVX2=ON -DENABLE_AVX=ON \
+-DENABLE_SSE2=ON -DENABLE_SSE=ON \
+-DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/$BUILD_LABEL \
+-DCMAKE_C_FLAGS_RELEASE=$GCC_FLAGS \
+-DCMAKE_CXX_FLAGS_RELEASE=$GCC_FLAGS \
+&& time -p make VERBOSE=1 V=1 install -j \
+&& cd $INSTALL_DIR/$BUILD_LABEL && ln -s lib64 lib | tee $BUILD_LABEL.log "
+
+//run build process
+
+eval $CMD_BUILD_SHARED_GCC 2&>1 | tee fftwlog.txt
