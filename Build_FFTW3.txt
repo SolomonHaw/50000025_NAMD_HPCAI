@@ -9,7 +9,13 @@ INSTALL_DIR=$HOME/scratch/apacsNAMD/cluster/curtin/application/lib \
 CMAKE_PATH=$HOME/cmake/bin/cmake \
 GCC_PATH=$HOME/scratch/apacsNAMD/cluster/gcc840-build/bin/gcc \
 
-//This code creates fftw shared libraries with GNU GCC and build script
+### Configure and make fftw3
+module load binutils/2.26
+mkdir fftw-3.3.8/build-3.3.8-shared-gcc840-avx2-haswell
+./configure --prefix=$WORK_DIR/fftw-3.3.8/build-3.3.8-shared-gcc840-avx2-haswell --enable-mpi --enable-avx2 
+make install
+
+### Build code for fftw shared library (single precision) with GNU Compiler
 BUILD_LABEL=$CODE_TAG-shared-gcc840-avx2-haswell \
 CMD_BUILD_SHARED_GCC=" \
 mkdir $CODE_DIR/build-$BUILD_LABEL; \
@@ -23,12 +29,12 @@ cd $CODE_DIR/build-$BUILD_LABEL \
 -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR/$BUILD_LABEL \
 -DCMAKE_C_FLAGS_RELEASE=$GCC_FLAGS \
 -DCMAKE_CXX_FLAGS_RELEASE=$GCC_FLAGS \
-&& time -p make VERBOSE=1 V=1 install -j \
-&& cd $INSTALL_DIR/$BUILD_LABEL && ln -s lib64 lib | tee $BUILD_LABEL.log "
+&& time -p make VERBOSE=1 V=1 install "
 
-//run the code above
-eval $CMD_BUILD_SHARED_GCC 2&>1 | tee fftwlog.txt
+## Build fftw shared library
+cd fftw-3.3.8/build-3.3.8-shared-gcc840-avx2-haswell
+make
 
-//run simd and no-simd test
-./build-3.3.8-shared-icc20-avx2-haswell/ bench -o patient -o nosimd 10240
-./build-3.3.8-shared-icc20-avx2-haswell/bench -o patient 10240
+//run simd test
+ ./bench -o patient -o nosimd 10240
+ ./bench -o patient 10240
