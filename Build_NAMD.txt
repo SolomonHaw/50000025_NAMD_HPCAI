@@ -1,1 +1,41 @@
+//Setup of environmental variables, components and files needed to build multi-core NAMD
+//Charm++, OpenMPI, FFTW3, GCC
+CHARM_ARCH_MPI_GCC=mpi-linux-x86_64-gfortran-gcc \
+CODE_NAME=charm \
+CODE_GIT_TAG=FETCH_HEAD \
+CODE_GIT_TAG=v6.10.2 \
+CHARM_CODE_DIR=$HOME/cluster/curtin/code/charm-v6.10.2 \
+CHARM_BASE=$CHARM_CODE_DIR \
+FFTW3_LIB_DIR=$HOME/scratch/apacsNAMD/cluster/curtin/code/fftw-3.3.8 \
+GCC_FFTW3_LIB_DIR=$FFTW3_LIB_DIR/build-3.3.8-shared-gcc493-avx2-haswell \
+APP_MPI_DIR=$HOME \
+HPCX_FILES_DIR=$APP_MPI_DIR/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64 \
+GCC_PATH=/app/gcc/4.9.3/bin/gcc \
+GXX_PATH=/app/gcc/4.9.3/bin/g++ \
+NATIVE_GCC_FLAGS='"-static-libstdc++ -static-libgcc -march=native -mtune=native -mavx2 -msse4.2 -O3 -DNDEBUG"' \
+GCC_FLAGS='"-static-libstdc++ -static-libgcc -march=haswell -mtune=haswell -mavx2 -msse4.2 -O3 -DNDEBUG"' \
+CODE_NAME=namd \
+CODE_GIT_TAG=FETCH_HEAD \
+CODE_GIT_TAG=release-2.12 \
+NAMD_CODE_DIR=$GIT_WORK_TREE/$CODE_NAME-$CODE_GIT_TAG \
+NAMD_DIR=$NAMD_CODE_DIR \
 
+### To build NAMD with Charm++ HPC-X OpenMPI + GCC8.4.0 + FFTW3
+CMD_BUILD_MPI_NAMD_GCC_FFTW3="
+. $HPCX_FILES_DIR/hpcx-mt-init-ompi.sh && hpcx_load \
+&& PATH=$GCC_DIR/bin:$PATH \
+./config Linux-x86_64-g++ --with-memopt \
+--charm-base $CHARM_BASE --charm-arch $CHARM_ARCH_MPI_GCC \
+--with-fftw3 --fftw-prefix $GCC_FFTW3_LIB_DIR \
+--cc $GCC_PATH --cc-opts $GCC_FLAGS \
+--cxx $GXX_PATH --cxx-opts $GCC_FLAGS \
+&& cd Linux-x86_64-g++ && time -p make -j \
+&& cd $NAMD_DIR && mv Linux-x86_64-g++ Linux-x86_64-g++-mpi-fftw3 \
+
+//Run build
+eval $CMD_BUILD_UCX_NAMD_GCC_FFTW3
+wait
+echo $CMD_BUILD_UCX_NAMD_GCC_FFTW3
+
+//Check for executable namd2
+$ ldd */namd2 | grep -e mkl -e fft -e libuc -e mpi -e libopen
