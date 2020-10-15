@@ -1,4 +1,5 @@
 //FFTW3-GCC
+//These are the environment variables and path needed to build fftw
 CODE_NAME=fftw \
 CODE_TAG=3.3.8 \
 PSXE_DIR=/app/modules/dev-intel/composerxe/2017.0.098 \
@@ -8,6 +9,7 @@ INSTALL_DIR=$HOME/scratch/apacsNAMD/cluster/curtin/application/lib \
 CMAKE_PATH=$HOME/cmake/bin/cmake \
 GCC_PATH=$HOME/scratch/apacsNAMD/cluster/gcc840-build/bin/gcc \
 
+//This code creates fftw shared libraries with GNU GCC and build script
 BUILD_LABEL=$CODE_TAG-shared-gcc840-avx2-haswell \
 CMD_BUILD_SHARED_GCC=" \
 mkdir $CODE_DIR/build-$BUILD_LABEL; \
@@ -24,6 +26,9 @@ cd $CODE_DIR/build-$BUILD_LABEL \
 && time -p make VERBOSE=1 V=1 install -j \
 && cd $INSTALL_DIR/$BUILD_LABEL && ln -s lib64 lib | tee $BUILD_LABEL.log "
 
-//run build process
-
+//run the code above
 eval $CMD_BUILD_SHARED_GCC 2&>1 | tee fftwlog.txt
+
+//run simd and no-simd test
+./build-3.3.8-shared-icc20-avx2-haswell/ bench -o patient -o nosimd 10240
+./build-3.3.8-shared-icc20-avx2-haswell/bench -o patient 10240
