@@ -7,6 +7,9 @@
 
 ## Getting the necessary files
     $ export WORK_DIR=path/to/work/dir<path to your working directory>
+apacsc11 NAMD working dir:
+
+    $ export WORK_DIR=/home/users/industry/ai-hpc/apacsc11/scratch/apacsNAMD/cluster/curtin/code
 
 Refer to Get_Essential_Files.txt
 
