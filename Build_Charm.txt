@@ -1,1 +1,51 @@
+//Path for HPC-X OpenMPI and UCX
+// As of latest: this option is not used in the submitted build.
+APP_MPI_PATH=/app/modules/dev-intel/openmpi/intel/1.10.2APP_MPI_PATH=/app/modules/dev-intel/openmpi/intel/1.10.2 \
+HPCX_FILES_DIR=$HOME/scratch/apacsNAMD/cluster/curtin/application/mpi/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64 \
+HPCX_MPI_DIR=$HPCX_FILES_DIR/ompi \
+HPCX_UCX_DIR=$HPCX_FILES_DIR/ucx \
+UCX_DIR=$HPCX_UCX_DIR \
 
+//Alternate OpenMPI path
+//Current ompi version
+export APPROOT=/app/openmpi/1.10.4/gcc493_cpu
+export PATH=$PATH:$APPROOT/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$APPROOT/lib
+
+//GCC
+GCC_DIR=$HOME/scratch/apacsNAMD/cluster/gcc840-build/bin/gcc \
+NATIVE_GCC_FLAGS="-march=native -mtune=native -mavx2 -msse4.2 -O3 -DNDEBUG" \
+GCC_FLAGS="-static-libstdc++ -static-libgcc -march=haswell -mtune=haswell -mavx2 -msse4.2 -O3 -DNDEBUG" \
+
+//Build Charm++
+//Create logfile
+ cat > buildlog.txt
+
+//non-smp without ROMIO (for testing)
+./build AMPI mpi-linux-x86_64 mpicxx gfortran --with-production --without-romio \
+--basedir=/app/openmpi/1.10.4/gcc493_cpu | tee buildlog.txt 
+
+//smp without ROMIO (for testing)
+./build AMPI mpi-linux-x86_64 mpicxx gfortran--with-production --without-romio smp \
+--basedir=/app/openmpi/1.10.4/gcc493_cpu 2>&1 | tee buildlog.txt
+
+//IB verbs
+./build charm++ verbs-linux-x86_64 mpicxx gcc gfortran--with-production \
+2>&1 | tee buildlog.txt
+
+//non-smp with ROMIO 
+./build AMPI mpi-linux-x86_64 mpicxx gfortran --with-production \
+--basedir=/app/openmpi/1.10.4/gcc493_cpu 2>&1 | tee buildlog.txt
+
+//If C compiler cannot build executables error is thrown:
+cd <namd version>/tmp 
+./configure CC='/scratch/apacsNAMD/cluster/curtin/code/charm-v6.10.2/mpi-linux-x86_64-mpicxx/bin/ampiCC \
+-default-to-aout'
+cd <namd version>/tmp/libs/ck-libs/ampi/romio 
+./configure \
+--with-mpi-impl=OMPI \
+--with-mpi=/app/openmpi/1.10.4/gcc493_cpu
+make
+
+//Use --prefix=$HOME/scratch/apacsNAMD/cluster/curtin/application/lib only if you want to install in another dir
+//Use 'make install' instead of 'make' for installing in other directories. Use'make' for default directory.
