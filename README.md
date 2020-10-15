@@ -30,3 +30,6 @@ Refer to Build_FFTW.txt
 ## Building Charm++
 Refer to Build_Charm.txt
 
+## Building NAMD
+Refer to Build_NAMD.txt
+
