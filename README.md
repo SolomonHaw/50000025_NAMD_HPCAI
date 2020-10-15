@@ -10,6 +10,8 @@
 
 Refer to Get_Essential_Files.txt
 
+To get access to apacsc11 NAMD working directory:
+
     $ setfacl -m u:pengzhi:xr /home/users/industry/ai-hpc/apacsc11/scratch/apacsNAMD
  
     $ setfacl -R -m u:pengzhi:xr /home/users/industry/ai-hpc/apacsc11/scratch/apacsNAMD
