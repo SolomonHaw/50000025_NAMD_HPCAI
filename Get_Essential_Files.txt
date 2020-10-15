@@ -2,6 +2,9 @@
 
   $ git clone --bare https://github.com/UIUC-PPL/charm.git \
   $HOME/$WORK_DIR/github/charm.git
+Checkout:
+  $ export GIT_DIR=$HOME/scratch/apacsNAMD/cluster/github/charm.git \
+  $ git --git-dir=$GIT_DIR --work-tree=$GIT_WORK_TREE checkout v6.10.2
 
 ### NAMD git:
 
@@ -18,6 +21,10 @@
   $ wget http://content.mellanox.com/hpc/hpc-x/v2.6/hpcx-v2.6.0-gccMLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64.tbz \
   $ -O $HOME/$WORK_DIR/code/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-
 x86_64.tbz
+Untar: 
+  wget http://content.mellanox.com/hpc/hpc-x/v2.6/hpcx-v2.6.0-gccMLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-x86_64.tbz \
+  -O $HOME/code/hpcx-v2.6.0-gcc-MLNX_OFED_LINUX-4.7-1.0.0.1-redhat7.7-
+  x86_64.tbz
 
 ### UCX git
 This is an alternate method of getting UCX, not neccessary if 
@@ -25,11 +32,25 @@ UCX in the HPC-X package works.
 
   $ git clone --bare https://github.com/openucx/ucx.git \
   $HOME/$WORK_DIR/github/ucx.git
-  
+Checkout:
+  GIT_DIR=$HOME/scratch/apacsNAMD/github/ucx.git \
+  GIT_WORK_TREE=$HOME/scratch/apacsNAMD/cluster/curtin/code \
+  CODE_DIR=$GIT_WORK_TREE/FETCH_HEAD \
+  UCX_GIT_TAG=FETCH_HEAD \
+  bash -c '
+  git --bare --git-dir=$GIT_DIR \
+  fetch --all --prune;
+  git --bare --git-dir=$GIT_DIR --work-tree=$GIT_WORK_TREE \
+  reset $UCX_GIT_TAG;
+  git --bare --git-dir=$GIT_DIR --work-tree=$GIT_WORK_TREE \
+  checkout-index --force --all --prefix=$CODE_DIR/ 
+  '
 ### OpenMPI git
 This is an alternate method of getting OpenMPI, not neccessary if 
 OpenMPI in the HPC-X package works. 
 
   $ git clone --bare https://github.com/open-mpi/ompi.git \
   $HOME/$WORK_DIR/github/ompi.git
-  
+Checkout:
+  $ export GIT_DIR=$HOME/scratch/apacsNAMD/cluster/github/ompi.git 
+  $ git --git-dir=$GIT_DIR --work-tree=$GIT_WORK_TREE checkout v3.1.6
